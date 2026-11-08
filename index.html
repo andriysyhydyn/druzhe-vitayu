@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex">
-<title>Друже, це тобі</title>
+<title>Роман, з днем народження</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Rubik:wght@400;800&display=swap" rel="stylesheet">
@@ -26,24 +26,19 @@
     overflow-x: hidden;
   }
   header {
-    min-height: 92vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    padding: 48px 16px;
+    padding: 56px 16px 12px;
     max-width: 1080px;
     margin: 0 auto;
   }
   .kicker { font: 700 clamp(26px, 4vw, 38px) Caveat, cursive; color: var(--accent); margin: 0 0 8px; }
   h1 {
     font-weight: 800;
-    font-size: clamp(56px, 13vw, 150px);
-    line-height: .95;
+    font-size: clamp(38px, 7vw, 76px);
+    line-height: 1;
     letter-spacing: -.03em;
     margin: 0;
   }
   .lead { font-size: clamp(18px, 2.4vw, 24px); line-height: 1.45; max-width: 34em; margin: 28px 0 36px; }
-  .down { font: 700 28px Caveat, cursive; color: var(--ink); text-decoration: none; border-bottom: 3px solid var(--accent); align-self: flex-start; }
 
   .album {
     columns: 3 300px;
@@ -83,6 +78,7 @@
     cursor: zoom-in;
   }
   figure img { display: block; width: 100%; height: auto; }
+  #greeting:focus { outline: none; }
   figcaption { font: 500 25px/1.15 Caveat, cursive; margin-top: 12px; }
 
   footer { max-width: 760px; margin: 0 auto; padding: 40px 16px 96px; text-align: center; }
@@ -120,28 +116,158 @@
   #next { right: 16px; top: 50%; margin-top: -24px; }
   #close { right: 16px; top: 16px; }
 
+  body.sealed { overflow: hidden; }
+  .intro {
+    position: fixed;
+    inset: 0;
+    z-index: 5;
+    display: grid;
+    place-items: center;
+    padding: 16px;
+    overflow: hidden;
+    background: var(--paper);
+    perspective: 1800px;
+    transition: opacity .5s ease;
+  }
+  .intro.gone { opacity: 0; pointer-events: none; }
+  .card {
+    position: relative;
+    width: min(100%, 440px);
+    height: min(86vh, 600px);
+    padding: 0;
+    border: 0;
+    background: none;
+    color: inherit;
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
+    transform-style: preserve-3d;
+    transition: transform 1.1s cubic-bezier(.6, .1, .3, 1);
+  }
+  .card:not(.open):hover { transform: rotate(-1.5deg) scale(1.02); }
+  .card:focus-visible { outline: 3px solid var(--ink); outline-offset: 8px; }
+  .card-inside {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    padding: 36px;
+    background: var(--card);
+    box-shadow: 0 18px 40px rgba(60, 40, 20, .28);
+    font: 500 clamp(28px, 7vw, 36px)/1.2 Caveat, cursive;
+  }
+  .card-cover {
+    position: absolute;
+    inset: 0;
+    transform-origin: left center;
+    transform-style: preserve-3d;
+    transition: transform 1.1s cubic-bezier(.6, .1, .3, 1);
+  }
+  .card.open .card-cover { transform: rotateY(-168deg); }
+  .face {
+    position: absolute;
+    inset: 0;
+    backface-visibility: hidden;
+  }
+  .face-front {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 36px 32px 28px;
+    background: var(--accent);
+    color: var(--card);
+    box-shadow: 0 18px 40px rgba(60, 40, 20, .28), inset 0 0 0 10px var(--accent), inset 0 0 0 12px rgba(255, 253, 248, .55);
+  }
+  .face-back { background: #eadfc9; transform: rotateY(180deg); }
+  .card-kicker { font: 700 28px Caveat, cursive; }
+  .card-title {
+    font-weight: 800;
+    font-size: clamp(36px, 10.5vw, 52px);
+    line-height: 1.02;
+    letter-spacing: -.02em;
+  }
+  .card-foot { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+  .card-hint { font: 700 26px/1.05 Caveat, cursive; }
+  .seal {
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: 76px;
+    height: 76px;
+    border-radius: 47% 53% 50% 50%;
+    background: #7a1f12;
+    color: #e9c98b;
+    font: 800 34px Rubik, sans-serif;
+    box-shadow: inset 0 0 0 5px #8f2a1a, inset 0 0 0 7px rgba(233, 201, 139, .45), 0 4px 10px rgba(40, 10, 5, .45);
+    animation: pulse 1.8s ease-in-out infinite;
+  }
+  @keyframes pulse { 50% { transform: scale(1.09); } }
+
+  .album.reveal figure {
+    animation: drop .65s cubic-bezier(.2, .9, .3, 1.15) backwards;
+    animation-delay: calc(var(--i) * 65ms);
+  }
+  @keyframes drop {
+    from { opacity: 0; transform: translateY(-70px) rotate(calc(var(--tilt) * 7)) scale(.88); }
+  }
+
+  .confetti {
+    position: fixed;
+    top: -24px;
+    z-index: 10;
+    width: 10px;
+    height: 16px;
+    pointer-events: none;
+    animation: fall var(--dur) ease-in var(--wait) forwards;
+  }
+  @keyframes fall { to { transform: translate(var(--drift), 112vh) rotate(var(--spin)); } }
+
+  @media (min-width: 760px) {
+    .card.open { transform: translateX(50%); }
+  }
+
   @media (prefers-reduced-motion: reduce) {
     html { scroll-behavior: auto; }
     figure, figure:hover { transition: none; transform: none; }
+    .album.reveal figure, .seal { animation: none; }
+    .card, .card-cover, .intro { transition: none; }
   }
 </style>
 </head>
-<body>
+<body class="sealed">
+<div class="intro" id="intro">
+  <button class="card" id="card" type="button" aria-label="Відкрити листівку для Романа">
+    <span class="card-inside">Тут зібрані твої фото протягом років, щоб нагадати про ключові моменти твого життя.</span>
+    <span class="card-cover">
+      <span class="face face-back"></span>
+      <span class="face face-front">
+        <span class="card-kicker">спеціальний випуск</span>
+        <span class="card-title">Роман, вітаємо тебе з&nbsp;днем народження</span>
+        <span class="card-foot">
+          <span class="card-hint">Натисни,<br>щоб відкрити</span>
+          <span class="seal" aria-hidden="true">Р</span>
+        </span>
+      </span>
+    </span>
+  </button>
+</div>
+
+<div id="content" hidden>
 <header>
   <p class="kicker">спеціальний випуск</p>
-  <h1>Друже,<br>вітаю!</h1>
-  <p class="lead">Тут зібрані докази того, що з тобою весело. Намети, гори, ванни посеред кімнати і один дуже незадоволений мопс. Гортай.</p>
-  <a class="down" href="#album">Дивитись альбом</a>
+  <h1 id="greeting" tabindex="-1">Роман,<br>вітаємо тебе<br>з днем народження</h1>
+  <p class="lead">Тут зібрані твої фото протягом років, щоб нагадати про ключові моменти твого життя.</p>
 </header>
 
 <main class="album" id="album"></main>
 
 <footer>
   <h2>Далі буде.</h2>
-  <p>Бажаю, щоб намети стояли, дипломи множились, а кішки дивились схвально.</p>
-  <p>Дякую, що ти є. З тобою навіть замерзле озеро виглядає як план.</p>
-  <p class="sign">Обіймаю, Андрій</p>
+  <p>Бажаємо міцного здоров'я, спокою в душі й людей поруч, на яких завжди можна покластися.</p>
+  <p>Нехай задумане збувається, робота приносить радість, а цей рік буде щедрим на добрі новини.</p>
+  <p class="sign">З любов'ю від друзів</p>
 </footer>
+</div>
 
 <dialog id="viewer" aria-label="Перегляд фото">
   <div class="lightbox">
@@ -165,6 +291,7 @@
   PHOTOS.forEach((p, i) => {
     const fig = document.createElement('figure');
     fig.style.setProperty('--tilt', tilts[i % tilts.length] + 'deg');
+    fig.style.setProperty('--i', i);
 
     const btn = document.createElement('button');
     btn.type = 'button';
@@ -184,6 +311,44 @@
     fig.append(btn, cap);
     album.append(fig);
   });
+
+  const intro = document.getElementById('intro');
+  const card = document.getElementById('card');
+  const calm = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const confettiColors = ['#c8452d', '#e2be70', '#2f6f8f', '#fffdf8', '#5f8f4e'];
+  history.scrollRestoration = 'manual';
+
+  function confetti() {
+    for (let n = 0; n < 60; n++) {
+      const bit = document.createElement('i');
+      bit.className = 'confetti';
+      bit.style.left = Math.random() * 100 + 'vw';
+      bit.style.background = confettiColors[n % confettiColors.length];
+      bit.style.setProperty('--dur', 2 + Math.random() * 1.6 + 's');
+      bit.style.setProperty('--wait', Math.random() * .5 + 's');
+      bit.style.setProperty('--drift', (Math.random() * 160 - 80) + 'px');
+      bit.style.setProperty('--spin', Math.random() * 900 + 'deg');
+      bit.addEventListener('animationend', () => bit.remove());
+      document.body.append(bit);
+    }
+  }
+
+  function reveal() {
+    document.getElementById('content').hidden = false;
+    document.body.classList.remove('sealed');
+    album.classList.add('reveal');
+    window.scrollTo(0, 0);
+    intro.classList.add('gone');
+    document.getElementById('greeting').focus({ preventScroll: true });
+    setTimeout(() => intro.remove(), calm ? 0 : 500);
+  }
+
+  card.addEventListener('click', () => {
+    if (card.classList.contains('open')) return;
+    card.classList.add('open');
+    if (!calm) confetti();
+    setTimeout(reveal, calm ? 0 : 1500);
+  }, { once: true });
 
   function show(i) {
     current = (i + PHOTOS.length) % PHOTOS.length;
